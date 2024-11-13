@@ -23,21 +23,23 @@ export const LoginValidation = (email, password) => {
         email
       );
     const isPasswordValid = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/.test(password);
-    const isNameValid = /^[a-zA-Z]+([-'\s][a-zA-Z]+)*$/.test(name);
-    const isPhoneNumValid = /(0|91)?[6-9][0-9]{9}/.test(phone);
+    const isNameValid = /^[a-zA-Z0-9_-]{4,16}$/.test(name)
+    // const isPhoneNumValid = /^\d{10}$/.test(phone);
+    
     if (!isEmailValid) {
       return "The email is not valid";
     } else if (!isPasswordValid) {
       return "The password is not valid";
     } else if (!isNameValid) {
       return "The name is not valid";
-    } else if (!isPhoneNumValid) {
-      return "The phone number is not valid";
-    } else if (
+    } 
+    // else if (!isPhoneNumValid) {
+    //   return "The phone number is not valid";
+    // } 
+    else if (
       !isEmailValid &&
       !isPasswordValid &&
-      !isNameValid &&
-      !isPhoneNumValid
+      !isNameValid 
     ) {
       return "Email,Password,Name,phone numbers are not  valid.";
     } else {

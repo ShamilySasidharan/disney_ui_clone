@@ -4,14 +4,19 @@ import Footer from "./Footer";
 import Header from "./Header";
 import { useRef, useState } from "react";
 import { LoginValidation, SignupValidation } from "../utils/validate";
+import { createUserWithEmailAndPassword,signInWithEmailAndPassword,updateProfile   } from "firebase/auth";
+import {auth} from "../utils/firebase"
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addUser } from "../utils/userSlice";
 
 const Login = () => {
-  //   const navigate = useNavigate();
-
+  const navigate = useNavigate();
+  const dispatch =  useDispatch()
   const email = useRef(null);
   const password = useRef(null);
   const name = useRef(null);
-  const phone = useRef(null);
+  // const phone = useRef(null);
 
   const [showLoginForm, setShowLoginForm] = useState(false);
   const [showSignUpForm, setSignUpForm] = useState(false);
@@ -25,32 +30,78 @@ const Login = () => {
 
   // VALIDATION && DATA (EMAIL,PASSWORD ETC) USING useRef
   const handleBtnClick = () => {
-    // console.log(email.current.value)
-    // console.log(password.current.value)
-    // console.log(name.current.value)
-    // console.log(phone.current.value)
-    // navigate("/browse");
-    // const messageLogin = LoginValidation(email.current.value,password.current.value)
-    // console.log(message)
-    // setLoginErrMsg(messageLogin || "")
-    // const messageSignup = SignupValidation(email.current.value,password.current.value,phone.current.value,name.current.value)
-    // setSignUpErrMsg(messageSignup || "")
+
+    // VALIDATE FOR SIGNUP AND CREATE A USER IN FIREBASE
     if (showSignUpForm) {
       const messageSignup = SignupValidation(
         email.current.value,
         password.current.value,
-        phone.current.value,
         name.current.value
+         // phone.current.value.trim(),
       );
-      setSignUpErrMsg(messageSignup || "");
-    } else {
-      const messageLogin = LoginValidation(
-        email.current.value,
-        password.current.value
-      );
-      setLoginErrMsg(messageLogin || "");
+      setSignUpErrMsg(messageSignup);
+     
+      // ONLY CREATE A USER WHEN VALIDATION PASS/NO ERROR MESSAGE
+      if(!messageSignup){
+      // CREATEING A USER IN FIREBASE
+      createUserWithEmailAndPassword(auth,email.current.value, password.current.value)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        // AFTER USER CREATION UPDATE THE USER WITH DISPLAY NAME AND PHOTO URL
+            updateProfile(user, {
+              displayName: name.current.value, photoURL: "https://tse1.mm.bing.net/th?id=OIP.jg6Gqqdik-QMyEdihr5U7wHaHa&pid=Api&P=0&h=180"
+            }).then(() => {
+            // After Profile is updated then
+            // Important to note that the email,displayName,photoURL comes from the `auth`  not from the `user` because 
+            // it is not an updated user meaning without the displayName and url
+            // const {uid,email,displayName,photoURL} = user; changes to auth to get the new user information 
+              const {uid,email,displayName,photoURL} = auth.currentUser;
+                  // UPDATING THE REDUX STORE AGAIN BY DISPATCHING AN ACTION
+              dispatch(addUser({uid:uid,email:email,displayName:displayName,photoURL:photoURL}))
+              console.log(user)
+              navigate("/browse")
+            }).catch((error) => {
+              // An error occurred
+              setSignUpErrMsg(error.Message)
+            });
+        // CONSOLE.LOG(USER) > the firebase gives us a access token to us and is used for the authentication
+          })
+      .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      setSignUpErrMsg(errorCode + " " + errorMessage)
+      });
+    }
+}
+      
+      // VALIDATION AND AUTHENTICATION  OF SIGN IN 
+      else {
+        const messageLogin = LoginValidation(
+          email.current.value,
+          password.current.value
+        );
+        setLoginErrMsg(messageLogin || "");
+
+      // ONLY LOGIN A USER WHEN VALIDATION PASS/NO ERROR MESSAGE
+        if(!messageLogin){
+        // LOGIN AUTH
+        signInWithEmailAndPassword(auth, email.current.value, password.current.value)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          console.log(user)
+          navigate("/browse")
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setLoginErrMsg(errorCode + "-" + errorMessage)
+          navigate("/")
+        });
+        }
+    
     }
   };
+
 
   // TOGGLE BETWEEN THE SIGNUP AND LOGIN FROM
   const toggleForm = () => {
@@ -120,12 +171,12 @@ const Login = () => {
                         className="px-12 py-5 m-4 rounded-md border border-white bg-neutral-900"
                       />
 
-                      <input
+                      {/* <input
                         ref={phone}
-                        type="phone"
+                        type="text"
                         placeholder="Phone Number"
                         className="px-12 py-5 m-4 rounded-md border border-white bg-neutral-900"
-                      />
+                      /> */}
                     </div>
                   )}
 
