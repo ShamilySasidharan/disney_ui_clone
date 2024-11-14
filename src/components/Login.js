@@ -59,7 +59,8 @@ const Login = () => {
                   // UPDATING THE REDUX STORE AGAIN BY DISPATCHING AN ACTION
               dispatch(addUser({uid:uid,email:email,displayName:displayName,photoURL:photoURL}))
               console.log(user)
-              navigate("/browse")
+              // Navigation handling from the header.js 
+              // navigate("/browse")
             }).catch((error) => {
               // An error occurred
               setSignUpErrMsg(error.Message)
@@ -89,13 +90,15 @@ const Login = () => {
         .then((userCredential) => {
           const user = userCredential.user;
           console.log(user)
-          navigate("/browse")
+          // Navigation handling from the header.js 
+          // navigate("/browse")
         })
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
           setLoginErrMsg(errorCode + "-" + errorMessage)
-          navigate("/")
+          // Navigation handling from the header.js 
+          // navigate("/")
         });
         }
     

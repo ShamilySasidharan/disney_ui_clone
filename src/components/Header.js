@@ -10,23 +10,48 @@ import { signOut } from "firebase/auth";
 import { auth } from "../utils/firebase";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { removeUser } from "../utils/userSlice";
+import { removeUser } from "../utils/userSlice"
+import { useEffect } from "react";
+import {  onAuthStateChanged } from "firebase/auth";
+import { addUser } from '../utils/userSlice';
 
 const Header = () => {
-  const user = useSelector((store) => store.user);
   const dispatch = useDispatch()
-  const navigate = useNavigate();
+  const navigate = useNavigate()
+  const user = useSelector((store) => store.user);
   const handleSignOut = () => {
     signOut(auth)
       .then(() => {
       dispatch(removeUser())
-        navigate("/");
+        // navigate("/");
         // Sign-out successful.
       })
       .catch((error) => {
         navigate("/error");
       });
   };
+
+//onAuthStateChange function changed from app.js to header because of the navigation error 
+// useNavigate() can only be used inside the RouterProvider not outside the Router Provider 
+// All navigation will handle from here 
+  useEffect(()=>{
+   const unsubscribe = onAuthStateChanged(auth,(user) => {
+      if (user) {
+        // USER SIGNED IN
+        const {uid,email,displayName,photoURL} = user;
+        // UPDATE THE REDUX STORE BY DISPATCHING AN ACTION
+        dispatch(addUser({uid:uid,email:email,displayName:displayName,photoURL:photoURL}))
+       navigate("/browse")
+      } else {
+        // USER SIGNED OUT
+        dispatch(removeUser())
+        navigate("/")
+      }
+    });
+    return ()=> unsubscribe()
+  },[])
+
+
   return (
     <div className="bg-black h-screen flex w-full">
       <section className="bg-gradient-to-b from-slate-900 via-slate-950 to-black mx-auto p-4 ">
@@ -37,34 +62,36 @@ const Header = () => {
         {/* ICONS */}
         <nav className="p-2 m-2 ">
           <ul className=" px-4 py-10 ">
-            <li className="py-4">
+          {user ? (<li className="py-4">
+              
               <img
                 src={PROFILE_ICON}
                 alt="profile_icon"
                 width="20"
                 height="20"
               />
-            </li>
+            </li>) :  <li className="py-4">
+              <LuUserCircle  className="text-white hover:translate-y-1 font-extrabold size-6" />
+            </li> }
+           
+           
             <li className="py-4">
-              <LuUserCircle size={20} className="text-white" />{" "}
-            </li>
-            <li className="py-4">
-              <IoIosSearch size={20} className="text-white" />
+              <IoIosSearch size={20} className="text-white hover:translate-y-1 font-extrabold size-6" />
             </li>
             <li className="py-4 ">
-              <GoHome size={20} className="text-white" />
+              <GoHome size={20} className="text-white hover:translate-y-1 font-extrabold size-6" />
             </li>
             <li className="py-4 ">
-              <MdOutlineMovie size={20} className="text-white" />
+              <MdOutlineMovie size={20} className="text-white hover:translate-y-1 font-extrabold size-6" />
             </li>
             <li className="py-4 ">
-              <FiTv size={20} className="text-white" />
+              <FiTv size={20} className="text-white hover:translate-y-1 font-extrabold size-6" />
             </li>
             <li className="py-4 ">
-              <MdOutlineSportsBaseball size={20} className="text-white" />
+              <MdOutlineSportsBaseball size={20} className="text-white hover:translate-y-1 font-extrabold size-6" />
             </li>
             <li className="py-4 ">
-              <BiCategoryAlt size={20} className="text-white" />
+              <BiCategoryAlt size={20} className="text-white hover:translate-y-1 font-extrabold size-6" />
             </li>
           </ul>
         </nav>
