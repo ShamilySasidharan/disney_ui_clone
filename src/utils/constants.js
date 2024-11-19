@@ -12,3 +12,25 @@ export const API_OPTIONS =  {
       Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJlNjk5YjJiNzJiYzdmOTlkMzdkOTIwMDg5YTRiZjYxMyIsIm5iZiI6MTczMTUxNTkwMy4wNjU5MjUsInN1YiI6IjY3MTc2MWJhNTBhNmViMGJmYmMyN2RkZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.JWU2K3L93GyCsmsHtKgpe2CNiCzb4M_-E6wYjLY2D5E'
     }
   };
+
+  export const POSTER_URL ="https://image.tmdb.org/t/p/w500/";
+
+  export const SUPPORTED_LANGUAGE = [
+    {
+      id:"en",
+      name:"English"
+    },
+    {
+      id:"hindi",
+      name:"Hindi"
+    },
+    {
+      id:"german",
+      name:"German"
+    },
+    {
+      id:"spanish",
+      name:"Spanish"
+    }
+
+  ]

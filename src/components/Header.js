@@ -14,11 +14,27 @@ import { removeUser } from "../utils/userSlice"
 import { useEffect } from "react";
 import {  onAuthStateChanged } from "firebase/auth";
 import { addUser } from '../utils/userSlice';
+import { toggleSearchPage } from "../utils/searchSlice";
+// import Search from "./Search";
 
 const Header = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
+ 
   const user = useSelector((store) => store.user);
+ 
+  const goToSearch =()=>{
+    // TO SEARCH PAGE
+   dispatch(toggleSearchPage())
+   
+  }
+
+  const goToHome =()=>{
+    // BACK TO BROWSE PAGE
+    console.log("clicked")
+   dispatch(toggleSearchPage())
+  }
+   
   const handleSignOut = () => {
     signOut(auth)
       .then(() => {
@@ -53,8 +69,8 @@ const Header = () => {
 
 
   return (
-    <div className="bg-black h-screen flex w-full">
-      <section className="bg-gradient-to-b from-slate-900 via-slate-950 to-black mx-auto p-4 ">
+    <div className="bg-black h-screen flex w-full ">
+      <section className="bg-gradient-to-r from-slate-900 to-slate-900 mx-auto p-4 ">
         {/* DISNEY LOGO */}
         <div className="p-2 m-2 w-20">
           <img src={DISNEY_LOGO} alt="logo" />
@@ -69,17 +85,18 @@ const Header = () => {
                 alt="profile_icon"
                 width="20"
                 height="20"
+                className="text-white hover:translate-y-1 font-extrabold size-6" 
               />
             </li>) :  <li className="py-4">
-              <LuUserCircle  className="text-white hover:translate-y-1 font-extrabold size-6" />
+              <LuUserCircle  className="text-white hover:translate-y-1:font-extrabold size-6" />
             </li> }
            
-           
+          
             <li className="py-4">
-              <IoIosSearch size={20} className="text-white hover:translate-y-1 font-extrabold size-6" />
+              <IoIosSearch size={20} className="text-white hover:translate-y-1 font-extrabold size-8" onClick={goToSearch}/>
             </li>
-            <li className="py-4 ">
-              <GoHome size={20} className="text-white hover:translate-y-1 font-extrabold size-6" />
+            <li className="py-4">
+              <GoHome size={20} className="text-white hover:translate-y-1 font-extrabold size-6"  onClick={goToHome}/>
             </li>
             <li className="py-4 ">
               <MdOutlineMovie size={20} className="text-white hover:translate-y-1 font-extrabold size-6" />

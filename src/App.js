@@ -7,6 +7,8 @@ import { RouterProvider } from 'react-router-dom';
 
 
 import Error from './components/Error';
+import MovieDetails from './components/MovieDetails';
+import Search from './components/Search';
 
 function App() {
 
@@ -23,7 +25,16 @@ function App() {
     {
       path : "/error",
       element:<Error/>
+    },
+    {
+      path:"/moviedetails",
+      element:<MovieDetails/>
+    },
+    {
+      path:"/search",
+      element:<Search/>
     }
+
   
   ])
 

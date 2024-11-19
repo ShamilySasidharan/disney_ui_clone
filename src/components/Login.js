@@ -6,12 +6,12 @@ import { useRef, useState } from "react";
 import { LoginValidation, SignupValidation } from "../utils/validate";
 import { createUserWithEmailAndPassword,signInWithEmailAndPassword,updateProfile   } from "firebase/auth";
 import {auth} from "../utils/firebase"
-import { useNavigate } from "react-router-dom";
+
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
 
 const Login = () => {
-  const navigate = useNavigate();
+ 
   const dispatch =  useDispatch()
   const email = useRef(null);
   const password = useRef(null);
@@ -58,7 +58,7 @@ const Login = () => {
               const {uid,email,displayName,photoURL} = auth.currentUser;
                   // UPDATING THE REDUX STORE AGAIN BY DISPATCHING AN ACTION
               dispatch(addUser({uid:uid,email:email,displayName:displayName,photoURL:photoURL}))
-              console.log(user)
+              // console.log(user)
               // Navigation handling from the header.js 
               // navigate("/browse")
             }).catch((error) => {
@@ -118,7 +118,7 @@ const Login = () => {
         <Header />
       </div>
       {/* LOGIN LANDING PAGE CONTENT */}
-      <div className="flex-1 flex-col justify-center items-center bg-gradient-to-b from-slate-900 via-slate-950 to-black ">
+      <div className="flex-1 flex-col justify-center items-center bg-gradient-to-r from-slate-900 to-slate-900  ">
         <img src={STAR_BACKGROUND} alt="star" />
         <div className="flex flex-col text-white text-center p-4 pt-30 ">
           <img

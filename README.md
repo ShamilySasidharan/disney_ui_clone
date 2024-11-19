@@ -27,9 +27,31 @@
 - TMDB api for movies
     # browse page creation
     - browse page have two components
+    
     - main conatainer with videoBackground
-    - secondary container with videoTitle and other details
+      - with videoTitle and other details
+      - made the trailer preview and other details, done some css
+      - create the trailer in movieSlice, made the fetch call and got the trailer, put in store and subscribed to the store to get the trailer
+      - create custom hooks for the trailer and now playing movies
+      - done the css using the trailer
+      - main component is done with styling
 
+    - secondary container
+    - with Movielist and movie card the secondary container will act as a parent and props to the children
+    - created additional movieDetails page 
+    - so when a card is clicked it should take to movie details page 
+    # Search page 
+    - created a search bar and btn
+    - created a select option and add the multilingual selection 
+         - connecting with the search bar, btn with the option 
+                - first create a slice for change language 
+                - then click an on click function in the select option and track the event using the a fucntion
+                - and dispatch an action to store the event
+                - then subscribe to the store and display 
+                - note :- important to pass them as langConst[languageOption] otherwise error (need square bracket )
+
+
+    
 
 
 # Authentication
